@@ -36,7 +36,7 @@ fameRouter.get('/progress/:year/:month', async(req, res)=>{
     const currentYear = parseInt(req.params.year);
     let query;
 
-    let prevMonth = currentMonth - 1;
+    let prevMonth = currentMonth + 1;
     let prevYear = currentYear;
   
     if(currentMonth == date.getMonth() + 1 && currentYear == date.getFullYear()){
@@ -57,7 +57,7 @@ fameRouter.get('/progress/:year/:month', async(req, res)=>{
     const currentTable = `fame_${currentMonth}_${currentYear}`;
     prevTable = `fame_${prevMonth}_${prevYear}`;
 
-    query = `SELECT famlist.id, famlist.nick, famlist.class, ${currentTable}.fame as currentFame, ${prevTable}.fame as prevFame,  (${currentTable}.fame - ${prevTable}.fame) as diff from famlist INNER JOIN ${currentTable} ON ${currentTable}.id = famlist.id INNER JOIN ${prevTable} on ${prevTable}.id = famlist.id ORDER BY diff DESC`;
+    query = `SELECT famlist.id, famlist.nick, famlist.class, ${prevTable}.fame as currentFame, ${currentTable}.fame as prevFame,  (${prevTable}.fame - ${currentTable}.fame) as diff from famlist INNER JOIN ${currentTable} ON ${currentTable}.id = famlist.id INNER JOIN ${prevTable} on ${prevTable}.id = famlist.id ORDER BY diff DESC`;
     
     const results = await db.promise().query(query);
     res.status(200).send(results[0]);
@@ -68,5 +68,11 @@ fameRouter.get('/progress/:year/:month', async(req, res)=>{
   }
 });
 
+
+fameRouter.get('/list', async(req, res) =>{
+  const query = 'SELECT id, table_name, month_year from fame_list ORDER by id DESC LIMIT 2';
+  const results = await db.promise().query(query);
+  res.status(200).send(results[0]);
+});
 
 module.exports = fameRouter;
