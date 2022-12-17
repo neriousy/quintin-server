@@ -1,0 +1,23 @@
+GET http://localhost:3000/api/fame/progress/2022/12
+
+
+###
+
+POST http://localhost:3000/api/auth/login
+content-type: application/json
+
+{
+  "login": "test",
+  "password": "abcd"
+}
+
+
+###
+
+POST http://localhost:3000/api/auth/register
+content-type: application/json
+
+{
+  "login": "test",
+  "password": "abcd"
+}
